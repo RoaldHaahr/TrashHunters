@@ -1,0 +1,4 @@
+div#map > img {
+	width: auto !important;
+	height: 100% !important;
+}
