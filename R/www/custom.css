@@ -1,4 +1,16 @@
-div#map > img {
+/*div#map > img {
 	width: auto !important;
 	height: 100% !important;
+}*/
+
+.container-fluid {
+	padding: 0;
+}
+
+#map {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh !important;
+	z-index: 0;
 }

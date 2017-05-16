@@ -1,0 +1,4 @@
+As it turns out we the smallest groups we can make with the data is by grouping them with 3 decimals.
+If attempted grouped by more than 3 decimals, all values would be unique and therefore unable to be grouped.
+Therefore, grouping by 3 decimals is the best and most precise we can do
+It results in 2357 squares
