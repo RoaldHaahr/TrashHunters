@@ -1,6 +1,3 @@
-library(shiny)
-library(ggmap)
-
 shinyUI(
   fluidPage(
     
@@ -12,9 +9,9 @@ shinyUI(
     ),
     sidebarPanel(
       width = 2,
-      dateRangeInput("daterange", NULL, start = "2015-05-31", end = "2016-03-15"),
-      uiOutput("brandInput"),
-      uiOutput("typeInput")
+      dateRangeInput("daterange", NULL, start = "2015-05-31", end = "2016-03-11"),
+      uiOutput("brand"),
+      uiOutput("type")
     )
     
     

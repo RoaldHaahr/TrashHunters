@@ -4,51 +4,65 @@
 # install_github('ramnathv/rCharts@dev')
 # install_github('ramnathv/rMaps')
 
-# -----------------------Attempt using rMaps---------------------------------- 
-
-trash <- read.csv("../Data/output.csv")
-trash <- trash %>% filter(latitude != 0, latitude != 1, longitude != 0, longitude != 0)
-
-library(rMaps)
-library(leaflet)
+# -----------------------Attempt using leaflet---------------------------------- 
 
 server <- function(input, output) {
+  library(shiny)
+  library(ggmap)
+  library(leaflet)
+  library(dplyr)
+  
+  trash <- read.csv("../Data/output.csv")
+  trash <- trash %>% filter(latitude != 0, latitude != 1, longitude != 0, longitude != 0)
+  
   output$map <- renderLeaflet({
     leaflet() %>%
       setView(lng = 4.897670745849609, lat = 52.37151193297624, zoom = 14) %>%
       addProviderTiles(
         providers$Stamen.TonerLite,
         options = providerTileOptions(noWrap = TRUE)
-      ) %>%
-      addMarkers(
-        data = trash,
-        clusterOptions = markerClusterOptions()
       )
   })
   
-  filter_data <- reactive({
-    if (!is.null(input$typeInput) && input$typeInput != 'All') {
-      trash <- subset(trash, trash$type == input$typeInput)
+  filtered_data <- reactive({
+    if (!is.null(input$type) && as.character(input$type) != "All") {
+      trash <- subset(trash, trash$type == input$type)
     }
-    if (!is.null(input$brandInput) && input$brandInput != 'All') {
-      trash <- subset(trash, trash$brand == input$brandInput)
+    if (!is.null(input$brand) && as.character(input$brand) != "All") {
+      trash <- subset(trash, trash$brand == input$brand)
+    }
+    if (!is.null(input$daterange)) {
+      trash <- subset(trash, as.Date(trash$taken) >= as.Date(input$daterange[1]) 
+                      && as.Date(trash$taken) <= as.Date(input$daterange[2]))
     }
     return (trash)
   })
   
-  output$typeInput <- renderUI({
+  observe({
+    map <<- leafletProxy("map", data = filtered_data()) %>%
+      removeMarkerCluster('trash') %>%
+      addMarkers(
+        clusterId = 'trash',
+        clusterOptions = markerClusterOptions(), 
+        popup = ~as.character(paste(type, brand))
+      )
+  })
+  
+  
+  
+  output$type <- renderUI({
     names <- distinct(trash, type)
     selectInput("type", label = "Choose type", c("All", as.character(names$type)))
   })
   
-  output$brandInput <- renderUI({
+  output$brand <- renderUI({
     names <- distinct(trash, brand)
     selectInput("brand", label = "Choose brand", c("All", as.character(names$brand)))
   })
   
-  observeEvent(input$typeInput, {
-    filter_data()
-  })
+  # observeEvent(input$type, {
+  #   filtered_data()
+  # })
 }
 
 # -----------------------Attempt using leaflet---------------------------------- 
