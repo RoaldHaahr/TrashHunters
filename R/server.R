@@ -48,9 +48,9 @@ server <- function(input, output) {
         popup =~ paste( sep = '<br />',
           type,
           brand,
-      )
           paste("Found ", as.Date(taken))
-        ) 
+      )
+    ) 
   })
   
   
