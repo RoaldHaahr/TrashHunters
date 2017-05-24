@@ -13,7 +13,7 @@ server <- function(input, output) {
   library(dplyr)
   
   trash <- read.csv("../Data/output.csv")
-  trash <- trash %>% filter(latitude != 0, latitude != 1, longitude != 0, longitude != 0)
+  trash <- trash %>% filter(latitude != 0, latitude != 1, longitude != 0, longitude != 1)
   
   output$map <- renderLeaflet({
     leaflet() %>%
@@ -25,17 +25,18 @@ server <- function(input, output) {
   })
   
   filtered_data <- reactive({
+    filtered_trash <- trash
     if (!is.null(input$type) && as.character(input$type) != "All") {
-      trash <- subset(trash, trash$type == input$type)
+      filtered_trash <- subset(filtered_trash, trash$type == input$type)
     }
     if (!is.null(input$brand) && as.character(input$brand) != "All") {
-      trash <- subset(trash, trash$brand == input$brand)
+      filtered_trash <- subset(filtered_trash, trash$brand == input$brand)
     }
     if (!is.null(input$daterange)) {
-      trash <- subset(trash, as.Date(trash$taken) >= as.Date(input$daterange[1]) 
-                      && as.Date(trash$taken) <= as.Date(input$daterange[2]))
+      filtered_trash <- subset(filtered_trash, as.Date(trash$taken) >= as.Date(input$daterange[1]) 
+                      & as.Date(trash$taken) <= as.Date(input$daterange[2]))
     }
-    return (trash)
+    return (filtered_trash)
   })
   
   observe({
@@ -44,8 +45,12 @@ server <- function(input, output) {
       addMarkers(
         clusterId = 'trash',
         clusterOptions = markerClusterOptions(), 
-        popup = ~as.character(paste(type, brand))
+        popup =~ paste( sep = '<br />',
+          type,
+          brand,
       )
+          paste("Found ", as.Date(taken))
+        ) 
   })
   
   

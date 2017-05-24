@@ -9,6 +9,7 @@ shinyUI(
     ),
     sidebarPanel(
       width = 2,
+      class = "filter",
       dateRangeInput("daterange", NULL, start = "2015-05-31", end = "2016-03-11"),
       uiOutput("brand"),
       uiOutput("type")
