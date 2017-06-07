@@ -8,9 +8,10 @@
 
 server <- function(input, output) {
   library(shiny)
-  library(ggmap)
+  #library(ggmap)
   library(leaflet)
   library(dplyr)
+  library(ggplot2)
   
   trash <- read.csv("../Data/output.csv")
   trash <- trash %>% filter(latitude != 0, latitude != 1, longitude != 0, longitude != 1)
@@ -52,7 +53,25 @@ server <- function(input, output) {
       )
     ) 
   })
+  geodata <- read.csv('../Data/output.csv')
   
+  
+  geodata$longitude <- (as.numeric(as.character(geodata$longitude)))
+  geodata$latitude <- (as.numeric(as.character(geodata$latitude)))
+  geodata <- geodata %>%
+    group_by(longitude, latitude)%>%
+    filter(longitude > 3.0) %>%
+    filter(longitude < 6.0) %>%
+    filter(latitude > 50.0)%>%
+    filter(latitude < 54.0)
+  
+  output$trashPlot <- renderPlot({
+    
+    ggplot(geodata, aes(x = factor(1), fill = factor(type))) + geom_bar(width = 1) + coord_polar(theta = "y")
+    
+    
+    
+  })
   
   
   output$type <- renderUI({
