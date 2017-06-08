@@ -1,14 +1,24 @@
 library(leaflet)
-
 shinyUI(
-  fluidPage(
+  
+  navbarPage(
+    
     
     includeCSS("www/custom.css"),
     
-    div(
+    
+    tabPanel(
+      title = "Map",
       class = "map",
       leafletOutput("map")
     ),
+    
+    tabPanel(
+      title = "Chart",
+      class = "chart",
+      plotOutput("trashPlot")
+    ),
+    
     sidebarPanel(
       width = 2,
       class = "filter",
