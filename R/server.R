@@ -67,7 +67,10 @@ server <- function(input, output) {
   
   output$trashPlot <- renderPlot({
     
-    ggplot(geodata, aes(x = factor(1), fill = factor(type))) + geom_bar(width = 1) + coord_polar(theta = "y")
+    ggplot(geodata, aes(x = factor(1), fill = factor(type))) + 
+      geom_bar(width = 1, aes(y = (..count..)/sum(..count..))) + 
+      coord_polar(theta = "y") +
+      scale_y_continuous(labels = percent)
     
     
     
