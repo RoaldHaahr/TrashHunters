@@ -70,6 +70,8 @@ server <- function(input, output) {
     ggplot(geodata, aes(x = factor(1), fill = factor(type))) + 
       geom_bar(width = 1, aes(y = (..count..)/sum(..count..))) + 
       coord_polar(theta = "y") +
+      xlab("") +
+      ylab("") +
       scale_y_continuous(labels = percent)
     
     

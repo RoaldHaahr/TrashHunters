@@ -1,4 +1,5 @@
 library(leaflet)
+library(scales)
 shinyUI(
   
   navbarPage(
@@ -22,7 +23,8 @@ shinyUI(
     sidebarPanel(
       width = 2,
       class = "filter",
-      dateRangeInput("daterange", NULL, start = "2015-05-31", end = "2016-03-11"),
+      dateRangeInput("daterange", NULL, start = "2015-06-01", end = Sys.Date()
+),
       uiOutput("brand"),
       uiOutput("type")
     )
